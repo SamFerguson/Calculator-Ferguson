@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name= "b_height">80dp</dimen>
+    <dimen name= "big_b_height">160dp</dimen>
+    <dimen name="b_t_size">20sp</dimen>
+    <dimen name="l_b_height">40dp</dimen>
+    <dimen name= "b_width">110dp</dimen>
+    <dimen name= "l_t_height">50sp</dimen>
+    <dimen name= "lay_b_height">56dp</dimen>
+
+</resources>
