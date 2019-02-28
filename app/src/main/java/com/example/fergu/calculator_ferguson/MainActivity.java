@@ -1,5 +1,6 @@
 package com.example.fergu.calculator_ferguson;
 
+import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -32,7 +33,6 @@ public class MainActivity extends AppCompatActivity {
     String firstOperand= "";
     String secondOperand= "";
     String operation = "";
-    String lastOperation = "";
     boolean pressedNewThing = false;
     boolean pressedEquals = false;
     String storedVar = "";
@@ -62,6 +62,16 @@ public class MainActivity extends AppCompatActivity {
         point = findViewById(R.id.point);
         equal = findViewById(R.id.equal);//make all the buttons
         display = findViewById(R.id.display);
+        if(savedInstanceState != null){
+            display.setText(savedInstanceState.getCharSequence("display"));
+            pressedNewThing = savedInstanceState.getBoolean("new");
+            pressedEquals= savedInstanceState.getBoolean("equals");
+            firstPress= savedInstanceState.getBoolean("first");
+            operation= savedInstanceState.getString("operation");
+            firstOperand = savedInstanceState.getString("firstOp");
+            secondOperand = savedInstanceState.getString("secondOp");
+            storedVar = savedInstanceState.getString("stored");
+        }
 
         one.setOnClickListener(click);
         two.setOnClickListener(click);
@@ -349,5 +359,20 @@ public class MainActivity extends AppCompatActivity {
     }
     public boolean aButtonDisabled(){
         return !(plus.isEnabled() && minus.isEnabled() && divide.isEnabled() && multiply.isEnabled());
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putCharSequence("display", display.getText());
+        outState.putBoolean("equals", pressedEquals);
+        outState.putBoolean("new", pressedNewThing);
+        outState.putBoolean("first",firstPress);
+        outState.putString("stored", storedVar);
+        outState.putString("operation", operation);
+        outState.putString("firstOp", firstOperand);
+        outState.putString("secondOp", secondOperand);
+
     }
 }
