@@ -8,8 +8,8 @@
 
 
     <GridLayout
-        android:layout_width="365dp"
-        android:layout_height="495dp"
+        android:layout_width="@dimen/p_GL_w"
+        android:layout_height="@dimen/p_GL_h"
         android:columnCount="4"
         android:columnOrderPreserved="true"
         android:rowCount="6"
@@ -21,13 +21,13 @@
 
         <TextView
             android:id="@+id/display"
-            android:layout_width="350dp"
-            android:layout_height="100dp"
+            android:layout_width="@dimen/p_TV_w"
+            android:layout_height="@dimen/p_TV_h"
             android:layout_columnSpan="4"
             android:layout_gravity="clip_horizontal"
             android:gravity="bottom|end"
             android:text="@string/zero"
-            android:textSize="40sp" />
+            android:textSize="@dimen/p_TV_tS" />
 
         <Button
             android:id="@+id/clear"

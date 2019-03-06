@@ -8,8 +8,8 @@
 
 
     <GridLayout
-        android:layout_width="550dp"
-        android:layout_height="295dp"
+        android:layout_width="@dimen/l_GL_w"
+        android:layout_height="@dimen/l_GL_h"
         android:alignmentMode="alignBounds"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -18,13 +18,13 @@
 
         <TextView
             android:id="@id/display"
-            android:layout_width="55dp"
-            android:layout_height="70dp"
+            android:layout_width="@dimen/l_TV_w"
+            android:layout_height="@dimen/l_TV_h"
             android:layout_row="0"
             android:gravity="end|bottom"
             android:textSize="@dimen/l_t_height"
             android:layout_gravity="fill_horizontal"
-            android:layout_columnSpan="3"
+            android:layout_columnSpan="4"
             android:layout_column="0"
             />
 

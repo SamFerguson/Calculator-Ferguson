@@ -73,7 +73,10 @@ public class MainActivity extends AppCompatActivity {
         point = findViewById(R.id.point);
         equal = findViewById(R.id.equal);//make all the buttons
         display = findViewById(R.id.display);
+        //operations array to set enabled on restore instance
+        TextView[] operations = {plus, multiply, minus, divide};
         if(savedInstanceState != null){
+            //reset display, logic values, operands, operations, temporary values, and greyed views
             display.setText(savedInstanceState.getCharSequence("display"));
             pressedNewThing = savedInstanceState.getBoolean("new");
             pressedEquals= savedInstanceState.getBoolean("equals");
@@ -82,7 +85,13 @@ public class MainActivity extends AppCompatActivity {
             firstOperand = savedInstanceState.getString("firstOp");
             secondOperand = savedInstanceState.getString("secondOp");
             storedVar = savedInstanceState.getString("stored");
+            boolean[] greyed = savedInstanceState.getBooleanArray("greyed");
+            for(int i= 0; i< operations.length; i++){
+                operations[i].setEnabled(greyed[i]);
+            }
+
         }
+        //make the operations for if your thing is landscape
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
 
             sqrt = findViewById(R.id.sqrt);
@@ -198,8 +207,9 @@ public class MainActivity extends AppCompatActivity {
                     if(!firstPress)
                         display.append(getString(R.string.seven));
                     if(firstPress) {
-                        plus.setEnabled(true);
+                        allowButtons();
                         display.setText(R.string.seven);
+                        firstPress = false;
                     }
                     break;
                 case R.id.eight:
@@ -223,10 +233,18 @@ public class MainActivity extends AppCompatActivity {
                     }
                     break;
                 case R.id.zero:
+                    if(firstPress && !pressedNewThing){
+                        allowButtons();
+                        display.setText(R.string.zero);
+                        firstPress = false;
+                        pressedNewThing = true;
+                        break;
+                    }
                     pressedNewThing = true;
                     if(!firstPress) {
                         display.append(getString(R.string.zero));
                     }
+
                     break;
                 //FOR PI I DON'T CARE IF THEY HAVE SOMETHING
                 //TOUGH ROCKS, IT'S PI NOW
@@ -235,8 +253,7 @@ public class MainActivity extends AppCompatActivity {
                     display.setText(R.string.pinumber);
                     break;
                 //FOR PLUS MINUS
-                //IF THERE ARE ONLY ZEROES IN THE STRING ex: 0.0000 DONT PREPEND
-                //IF THERE IS A '-' REMOVE IT
+                //only allows user to change after they type
                 case R.id.plusminus:
                     //get temp string
                     String temp = display.getText().toString();
@@ -249,12 +266,12 @@ public class MainActivity extends AppCompatActivity {
                     //if the first thing isn't a - and it's not all zeroes prepend a minus
                     if (temp.length() > 0 && temp.charAt(0) != '-' && !justZeros) {
                         temp = (getString(R.string.minus) + temp);
-                        display.setText((CharSequence) temp);
+                        display.setText(temp);
                     }
                     // if it is a - get rid of it
                     else if (temp.length() > 0 && temp.charAt(0) == '-' && !justZeros) {
                         temp = temp.substring(1);
-                        display.setText((CharSequence) temp);
+                        display.setText(temp);
                     }
                     break;
                 //IF THERE'S A DECIMAL DONT PUT ONE!!!!!!
@@ -288,10 +305,9 @@ public class MainActivity extends AppCompatActivity {
                     break;
 
                 //SET THE OPERATION AND THE OPERAND AND IF THEY PRESS EQUAL TAKE THEM AND CALCULATE
-                //TODO: IF AN OPERATION HAS BEEN TOUCH ALREADY, CALL CALCULATE AND MAKE IT THE FIRST OPERAND
                 case R.id.multiply:
                     //if there's a calculation waiting
-                    if(!firstOperand.equals("") && pressedNewThing &&pressedEquals){
+                    if(!firstOperand.equals("") && pressedNewThing && !pressedEquals){
                         secondOperand = display.getText().toString();
                         calculate();
                     }
@@ -361,7 +377,6 @@ public class MainActivity extends AppCompatActivity {
                         calculate();
                         firstPress = true;
                     }
-                    System.out.println(firstOperand + " " + secondOperand + " " + operation);
                     break;
 
                 //These are the unary operations from landscape
@@ -369,14 +384,14 @@ public class MainActivity extends AppCompatActivity {
 
                     double t1 = Double.parseDouble(display.getText().toString());
                     t1= Math.sqrt(t1);
-                    display.setText((CharSequence)Double.toString(t1));
+                    display.setText(Double.toString(t1));
                     break;
 
                 case R.id.qrt:
 
                     double t2 = Double.parseDouble(display.getText().toString());
                     t2 = Math.cbrt(t2);
-                    display.setText((CharSequence)Double.toString(t2));
+                    display.setText(Double.toString(t2));
                     break;
 
                 case R.id.fact:
@@ -386,48 +401,47 @@ public class MainActivity extends AppCompatActivity {
                     }
                     int t3 = Integer.parseInt(display.getText().toString());
                     int rtn = 1;
-                    for(int i = t3; i>0; i++){
+                    for(int i = t3; i>0; i--){
                         rtn *= i;
                     }
-                    display.setText((CharSequence)Integer.toString(rtn));
+                    System.out.println(rtn);
+                    display.setText(Integer.toString(rtn));
 
                     break;
                 case R.id.square:
 
                     double t4 = Double.parseDouble(display.getText().toString());
                     t4 = t4*t4;
-                    display.setText((CharSequence)Double.toString(t4));
+                    display.setText(Double.toString(t4));
 
                     break;
                 case R.id.cube:
 
                     double t5 = Double.parseDouble(display.getText().toString());
                     t5 = t5*t5*t5;
-                    display.setText((CharSequence)Double.toString(t5));
+                    display.setText(Double.toString(t5));
+                    
                     break;
                 //just give the natural log
                 case R.id.ln:
 
                     double t6 = Double.parseDouble(display.getText().toString());
                     t6 = Math.log(t6);
-                    display.setText((CharSequence)Double.toString(t6));
+                    display.setText(Double.toString(t6));
 
                     break;
                 case R.id.log:
-                    System.out.println("im in the log");
                     double t7 = Double.parseDouble(display.getText().toString());
                     //what's change of base again
                     t7 = Math.log(t7)/Math.log(2);
-                    display.setText((CharSequence)Double.toString(t7));
+                    display.setText(Double.toString(t7));
 
                     break;
             }
         }
     };
-
     public void calculate(){
         double ans = 0.0;
-        System.out.println(operation+ " "+ firstOperand + " " + secondOperand);
 
         switch (operation) {
             case "multiplication":
@@ -444,9 +458,8 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
         String answer = Double.toString(ans);
-        display.setText((CharSequence)answer);
+        display.setText(answer);
         firstOperand = answer;
-
     }
     public void allowButtons(){
         plus.setEnabled(true);
@@ -457,11 +470,12 @@ public class MainActivity extends AppCompatActivity {
     public boolean aButtonDisabled(){
         return !(plus.isEnabled() && minus.isEnabled() && divide.isEnabled() && multiply.isEnabled());
     }
-
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
+        boolean[] greyed = {plus.isEnabled(), multiply.isEnabled(), minus.isEnabled(), divide.isEnabled()};
+        outState.putBooleanArray("greyed", greyed);
         outState.putCharSequence("display", display.getText());
         outState.putBoolean("equals", pressedEquals);
         outState.putBoolean("new", pressedNewThing);
@@ -470,11 +484,5 @@ public class MainActivity extends AppCompatActivity {
         outState.putString("operation", operation);
         outState.putString("firstOp", firstOperand);
         outState.putString("secondOp", secondOperand);
-
-    }
-    public void setUnaryOperations(boolean b){
-
-
-
     }
 }
